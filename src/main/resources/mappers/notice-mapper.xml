@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NoticeMapper">
+
+	<!-- typeAliases로 별칭을 부여야 Notice로 작성 가능하고, 아니면 경로 다 적어줘야 함. -->
+	<resultMap type="Notice" id="noticeResultMap">
+		<id property="noticeNo" column="NOTICE_NO" />
+		<result property="noticeSubject" 	column="NOTICE_SUBJECT" />
+		<result property="noticeContent" 	column="NOTICE_CONTENT" />
+		<result property="noticeWriter" 	column="NOTICE_WRITER" />
+		<result property="nCreateDate" 		column="N_CREATE_DATE" />
+		<result property="nUpdateDate" 		column="N_UPDATE_DATE" />
+		<result property="noticeFilename" 	column="NOTICE_FILENAME" />
+		<result property="noticeFilepath" 	column="NOTICE_FILEPATH" />
+		<result property="noticeFilelength" column="NOTICE_FILELENGTH" />
+	</resultMap>
+
+	<insert id="insertNotice">
+		INSERT INTO NOTICE_TBL VALUES(SEQ_NOTICE_NO.NEXTVAL, #{ noticeSubject }, #{ noticeContent }, #{ noticeWriter }, DEFAULT, DEFAULT, #{ noticeFilename }, #{ noticeFilepath }, #{ noticeFilelength })
+	</insert>
+	
+	<select id="selectNoticeList" resultMap="noticeResultMap">
+		SELECT * FROM NOTICE_TBL
+	</select>
+</mapper>
