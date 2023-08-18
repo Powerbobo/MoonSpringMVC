@@ -19,7 +19,75 @@
 		INSERT INTO NOTICE_TBL VALUES(SEQ_NOTICE_NO.NEXTVAL, #{ noticeSubject }, #{ noticeContent }, #{ noticeWriter }, DEFAULT, DEFAULT, #{ noticeFilename }, #{ noticeFilepath }, #{ noticeFilelength })
 	</insert>
 	
+	<!-- 공지사항 가져오기 -->
 	<select id="selectNoticeList" resultMap="noticeResultMap">
+		SELECT * FROM NOTICE_TBL ORDER BY NOTICE_NO DESC
+	</select>
+	
+	<!-- 공지사항 전체 검색 -->
+	<select id="searchNoticeByAll" resultMap="noticeResultMap">
+		SELECT * FROM NOTICE_TBL WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%'
+	</select>
+	
+	<!-- 공지사항 작성자로 검색 -->
+	<select id="searchNoticeByWriter" resultMap="noticeResultMap">
+		SELECT * FROM NOTICE_TBL WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%'
+	</select>
+		
+	<!-- 공지사항 제목으로 검색 -->
+	<select id="selectNoticeByTitle" resultMap="noticeResultMap">
+		SELECT * FROM NOTICE_TBL WHERE NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%'
+	</select>
+
+	<!-- 공지사항 내용으로 검색 -->
+	<select id="searchNoticeByContent" resultMap="noticeResultMap">
+		SELECT * FROM NOTICE_TBL WHERE NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%'
+	</select>
+
+	<!-- 공지사항 갯수 가져오기 -->
+	<select id="selectNoticeListCount" resultType="_int">
+		SELECT COUNT(*) FROM NOTICE_TBL
+	</select>
+	
+	<!-- 공지사항 Mybatis 동적 쿼리문 -->
+	<select id="searchNoticeByKeyword" resultMap="noticeResultMap">
 		SELECT * FROM NOTICE_TBL
+		<!-- 공지사항 전체 조회 -->
+		<if test="searchCondition == 'all'">
+			WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%'OR NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%'
+		</if>
+		<!-- 공지사항 작성자로 조회 -->
+		<if test="searchCondition == 'writer'">
+			WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%' 
+		</if>
+		<!-- 공지사항 제목으로 조회 -->
+		<if test="searchCondition == 'title'">
+			WHERE NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' 
+		</if>
+		<!-- 공지사항 내용 조회 -->
+		<if test="searchCondition == 'content'">
+			WHERE NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%'
+		</if>
+	</select>
+	
+	<!-- 공지사항 검색 게시물 전체 갯수 -->
+	<select id="selectListByKeywordCount" resultType="_int">
+		SELECT COUNT(*) FROM NOTICE_TBL
+		<!-- 공지사항 전체 조회 -->
+		<if test="searchCondition == 'all'">
+			WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%'OR NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%'
+		</if>
+		<!-- 공지사항 작성자로 조회 -->
+		<if test="searchCondition == 'writer'">
+			WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%' 
+		</if>
+		<!-- 공지사항 제목으로 조회 -->
+		<if test="searchCondition == 'title'">
+			WHERE NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' 
+		</if>
+		<!-- 공지사항 내용 조회 -->
+		<if test="searchCondition == 'content'">
+			WHERE NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%'
+		</if>
 	</select>
 </mapper>

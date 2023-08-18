@@ -158,16 +158,6 @@ public class MemberController {
 		}
 	}
 	
-	// 마이페이지 수정페이지로 이동하기
-	@RequestMapping(value="/member/update.kh", method=RequestMethod.GET)
-	public String showModifyForm(
-			String memberId
-			, Model model) {
-		Member member = service.getMemberById(memberId);
-		model.addAttribute("member", member);
-		return "member/modify";
-	}
-
 	// 마이페이지 이동
 	@RequestMapping(value="/member/myPage.kh", method=RequestMethod.GET)
 	public String showMyPage(
@@ -196,5 +186,15 @@ public class MemberController {
 			model.addAttribute("url", "/index.jsp");
 			return "common/errorPage";
 		}
+	}
+	
+	// 회원정보 수정페이지로 이동하기
+	@RequestMapping(value="/member/update.kh", method=RequestMethod.GET)
+	public String showModifyForm(
+			String memberId
+			, Model model) {
+		Member member = service.getMemberById(memberId);
+		model.addAttribute("member", member);
+		return "member/modify";
 	}
 }
