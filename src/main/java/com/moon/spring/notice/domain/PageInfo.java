@@ -1,4 +1,4 @@
-package com.moon.spring.member.domain;
+package com.moon.spring.notice.domain;
 
 // 페이징 처리 관련 VO
 public class PageInfo {

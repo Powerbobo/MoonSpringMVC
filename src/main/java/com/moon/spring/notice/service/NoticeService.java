@@ -3,8 +3,8 @@ package com.moon.spring.notice.service;
 import java.util.List;
 import java.util.Map;
 
-import com.moon.spring.member.domain.PageInfo;
 import com.moon.spring.notice.domain.Notice;
+import com.moon.spring.notice.domain.PageInfo;
 
 public interface NoticeService {
 

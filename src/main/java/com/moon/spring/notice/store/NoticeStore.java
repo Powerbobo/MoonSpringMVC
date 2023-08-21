@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
-import com.moon.spring.member.domain.PageInfo;
 import com.moon.spring.notice.domain.Notice;
+import com.moon.spring.notice.domain.PageInfo;
 
 public interface NoticeStore {
 

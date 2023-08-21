@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.moon.spring.member.domain.PageInfo;
 import com.moon.spring.notice.domain.Notice;
+import com.moon.spring.notice.domain.PageInfo;
 import com.moon.spring.notice.service.NoticeService;
 
 @Controller

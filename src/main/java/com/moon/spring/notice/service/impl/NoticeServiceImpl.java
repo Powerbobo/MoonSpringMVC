@@ -7,8 +7,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.moon.spring.member.domain.PageInfo;
 import com.moon.spring.notice.domain.Notice;
+import com.moon.spring.notice.domain.PageInfo;
 import com.moon.spring.notice.service.NoticeService;
 import com.moon.spring.notice.store.NoticeStore;
 
