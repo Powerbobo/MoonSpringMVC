@@ -19,6 +19,14 @@ public interface NoticeStore {
 	int insertNotice(SqlSession session, Notice notice);
 	
 	/**
+	 * 공지사항 수정 Stroe
+	 * @param session
+	 * @param notice
+	 * @return int
+	 */
+	int updateNotice(SqlSession session, Notice notice);
+
+	/**
 	 * 공지사항 목록 조회 Store
 	 * @param session
 	 * @return
@@ -79,6 +87,14 @@ public interface NoticeStore {
 	 * @return int
 	 */
 	int selectListCount(SqlSession session, Map<String, String> paramMap);
+
+	/**
+	 * 공지사항 번호로 조회 Store
+	 * @param session
+	 * @param noticeNo
+	 * @return Notice
+	 */
+	Notice selectNoticeByNo(SqlSession session, Integer noticeNo);
 
 
 }

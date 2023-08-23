@@ -16,6 +16,13 @@ public interface NoticeService {
 	int insertNotice(Notice notice);
 	
 	/**
+	 * 공지사항 수정 Service
+	 * @param notice
+	 * @return int
+	 */
+	int updateNotice(Notice notice);
+
+	/**
 	 * 공지사항 목록 조회 Service
 	 * @return List
 	 */
@@ -69,6 +76,13 @@ public interface NoticeService {
 	 * @return int
 	 */
 	int getListCount(Map<String, String> paramMap);
+
+	/**
+	 * 공지사항 번호로 조회 Service
+	 * @param noticeNo
+	 * @return Notice
+	 */
+	Notice selectNoticeByNo(Integer noticeNo);
 
 
 }

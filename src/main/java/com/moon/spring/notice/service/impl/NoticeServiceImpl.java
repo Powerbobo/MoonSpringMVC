@@ -28,6 +28,13 @@ public class NoticeServiceImpl implements NoticeService{
 		return result;
 	}
 
+	// 공지사항 수정
+	@Override
+	public int updateNotice(Notice notice) {
+		int result = nStore.updateNotice(session, notice);
+		return result;
+	}
+
 	// 공지사항 리스트 조회
 	@Override
 	public List<Notice> selectNoticeList(PageInfo pInfo) {
@@ -82,6 +89,13 @@ public class NoticeServiceImpl implements NoticeService{
 	public int getListCount(Map<String, String> paramMap) {
 		int result = nStore.selectListCount(session, paramMap);
 		return result;
+	}
+
+	// 공지사항 번호로 조회
+	@Override
+	public Notice selectNoticeByNo(Integer noticeNo) {
+		Notice noticeOne = nStore.selectNoticeByNo(session, noticeNo);
+		return noticeOne;
 	}
 
 }

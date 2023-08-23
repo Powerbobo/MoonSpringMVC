@@ -1,10 +1,14 @@
 package com.moon.spring.notice.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,12 +33,6 @@ public class NoticeController {
 	@Autowired	
 	private NoticeService service;
 
-	// 공지사항 페이지로 이동
-	@RequestMapping(value="/notice/insert.kh", method=RequestMethod.GET)
-	public String showInsertForm() {
-		return "notice/insert";
-	}
-	
 	// 공지사항 작성
 	@RequestMapping(value="/notice/insert.kh", method=RequestMethod.POST)
 	public String insertNotice(
@@ -43,31 +41,17 @@ public class NoticeController {
 			, HttpServletRequest request
 			, Model model) {
 		try {
-			if(!uploadFile.getOriginalFilename().equals("")) {
-				// ============================== 파일 이름 ==============================
-				String fileName = uploadFile.getOriginalFilename();
-				// (내가 저장훈 후 그 경로를 DB에 저장하도록 준비하는 것)
-				// getServletContext() -> Servlet에 관련된 객체들이 저장되어있는 메소드
-				// "resources" -> resources의 경로
-				String root = request.getSession().getServletContext().getRealPath("resources");
-				// 폴더가 없을 경우 자동 생성(내가 업로드한 파일을 저장할 폴더)
-				String saveFolder = root + "\\nuploadFiles";
-				File folder = new File(saveFolder);
-				if(!folder.exists()) {	// 해당 경로에 파일 있는지 여부 확인
-					// 없을 경우 폴더 생성
-					folder.mkdir();
-				}
-				// ============================== 파일 경로 ==============================
-				String savePath = saveFolder + "\\" + fileName;
-				File file = new File(savePath);
-				// ***************************** 파일 저장 *****************************
-				uploadFile.transferTo(file);
+			if(uploadFile != null && !uploadFile.getOriginalFilename().equals("")) {
 				
-				// ============================== 파일 크기 ==============================
-				long fileLength = uploadFile.getSize();
+				Map<String, Object> nMap = this.saveFile(uploadFile, request);
+				String fileName = (String)nMap.get("fileName");
+				String fileRename = (String)nMap.get("fileRename");
+				String savePath = (String)nMap.get("filePath");
+				long fileLength = (long)nMap.get("fileLength");
 				
 				// DB에 저장하기 위해 notice에 데이터를 Set 하는 부분
 				notice.setNoticeFilename(fileName);
+				notice.setNoticeFileRename(fileRename);
 				notice.setNoticeFilepath(savePath);
 				notice.setNoticeFilelength(fileLength);
 				
@@ -90,6 +74,62 @@ public class NoticeController {
 			model.addAttribute("url", "/member/insert.kh");
 			return "common/errorPage";
 		}
+	}
+
+	// 공지사항 수정하기
+	@RequestMapping(value="/notice/modify.kh", method=RequestMethod.POST)
+	public String updateNotice(
+			// @ModelAttribute 는 name의 값이 Notice의 필드명과 동일해야 사용할 수 있음
+			@ModelAttribute Notice notice
+			, @RequestParam(value="uploadFile", required=false) MultipartFile uploadFile
+			, HttpServletRequest request
+			, Model model) {
+		try {
+			//uploadFile 유효성(null인지 아닌지) 검사하고 나서 동작
+			if(uploadFile != null && !uploadFile.isEmpty()) {
+				// 수정
+				// 1. 대체, 2. 삭제 후 등록
+				// 삭제 후 등록 -> 기존 업로드 된 파일 존재 여부 체크 후
+				// 랜덤한 파일명으로 리네임해서 업로드하기 때문에 getNoticeFileRename 사용
+				String fileName = notice.getNoticeFileRename();
+				if(fileName != null) {
+					// 있으면 기존 파일 삭제
+					// 다른 메소드에서 쓰일 수 있기 때문에 메소드로 만들어서 사용
+					this.deleteFile(request, fileName);
+				}
+				// 없으면 새로 업로드 하려는 파일 저장
+				Map<String, Object> infoMap = this.saveFile(uploadFile, request);	// 기존 파일 불러오기
+				String noticeFilename = (String)infoMap.get("fileName"); // Object 타입이기때문에 형 변환
+				long noticeFilelength = (long)infoMap.get("fileLength");
+				notice.setNoticeFilename(noticeFilename);
+				// 변수선언방식도 있지만, 이렇게 한줄로 쓸수도 있음
+				notice.setNoticeFileRename((String)infoMap.get("fileRename"));
+				notice.setNoticeFilepath((String)infoMap.get("filePath"));
+				notice.setNoticeFilelength(noticeFilelength);
+			}
+			int result = service.updateNotice(notice);
+			if(result > 0) {
+				// 성공
+				return "redirect:/notice/detail.kh?noticeNo="+notice.getNoticeNo();
+			} else {
+				// 실패하면 에러 페이지
+				model.addAttribute("msg", "공지사항 수정이 완료되지 않았습니다.");
+				model.addAttribute("error", "공지사항 수정 실패");
+				model.addAttribute("url", "/notice/detail.kh");
+				return "common/errorPage";
+			}
+		} catch (Exception e) {
+			model.addAttribute("msg", "관리자에게 문의해주세요.");
+			model.addAttribute("error", e.getMessage());
+			model.addAttribute("url", "/member/list.kh");
+			return "common/errorPage";
+		}
+	}
+
+	// 공지사항 페이지로 이동
+	@RequestMapping(value="/notice/insert.kh", method=RequestMethod.GET)
+	public String showInsertForm() {
+		return "notice/insert";
 	}
 	
 	// 공지사항 리스트로 이동
@@ -132,6 +172,31 @@ public class NoticeController {
 			return "common/errorPage";
 		}
 	}
+
+	// 공지사항 번호로 조회
+	@RequestMapping(value="/notice/detail.kh", method=RequestMethod.GET)
+	public String showDetailNotice(
+			// "noticeNo" -> 쿼리스트링의 키값을 넣어줘야 함
+			// Null 체크하기 위해서 Integer 사용했고, Null 체크하지 않으면 int 사용해도 괜찮다.
+			@RequestParam("noticeNo") Integer noticeNo
+			, Model model) {	
+		Notice noticeOne = service.selectNoticeByNo(noticeNo);
+		// "notice" 은 키값으로 내가 정할 수 있다.
+		// noticeOne 으로 키값을 정했다면 detail.jsp 제목의 value 값을 notice. 이 아닌
+		// noticeOne 으로 사용하면 된다.
+		model.addAttribute("notice", noticeOne);
+		return "notice/detail";
+	}
+
+	// 수정페이지로 이동
+	@RequestMapping(value="/notice/modify.kh", method=RequestMethod.GET)
+	public String showModifyForm(
+			@RequestParam("noticeNo") Integer noticeNo
+			, Model model) {
+		Notice noticeOne = service.selectNoticeByNo(noticeNo);
+		model.addAttribute("notice", noticeOne);
+		return "notice/modify";
+	}
 	
 	// 페이지 네비게이션
 	public PageInfo getPageInfo(int currentPage, int totalCount) {
@@ -171,7 +236,7 @@ public class NoticeController {
 		pi = new PageInfo(currentPage, recordCountPerPage, naviCountPerPage, startNavi, endNavi, totalCount, naviTotalCount);
 		return pi;
 	}
-
+	
 	// 네비게이션 검색하기
 	@RequestMapping(value="/notice/search.kh", method=RequestMethod.GET)
 	public String searchNoticeList(
@@ -243,16 +308,80 @@ public class NoticeController {
 			model.addAttribute("url", "/list.jsp");
 			return "common/errorPage";
 		}
-		
-		// if문으로도 사용은 가능하지만, switch case문이 훨씬 간편함!
-		// if(searchCondition.equals("title")) {
-			//SELECT * FROM NOTICE_TBL WHERE NOTICE_SUBJECT = ?
-		// }
-		
-		
 	}
-	
-	
+
+	// 파일이름, 경로, 크기를 넘겨주는 메소드
+	public Map<String, Object> saveFile(MultipartFile uploadFile, HttpServletRequest request) throws Exception {
+		// 1. 넘겨야 하는 값이 여러개일 때 사용하는 방법
+		// 2. Hashmap을 사용하는 방법
+		// 데이터 타입이 여러개이기 때문에 Object 사용함
+		Map<String, Object> infoMap = new HashMap<String, Object>();
+		
+		// ============================== 파일 이름 ==============================
+		String fileName = uploadFile.getOriginalFilename();
+		// (내가 저장훈 후 그 경로를 DB에 저장하도록 준비하는 것)
+		// getServletContext() -> Servlet에 관련된 객체들이 저장되어있는 메소드
+		// "resources" -> resources의 경로
+		String root = request.getSession().getServletContext().getRealPath("resources");
+		// 폴더가 없을 경우 자동 생성(내가 업로드한 파일을 저장할 폴더)
+		String saveFolder = root + "\\nuploadFiles";
+		
+		
+		File folder = new File(saveFolder);
+		if(!folder.exists()) {	// 해당 경로에 파일 있는지 여부 확인
+			// 없을 경우 폴더 생성
+			folder.mkdir();
+		}
+		// ============================== 파일 경로 ==============================
+		// FILERENAME 추가
+		// 임의로 이름을 계속 부여하기 위해서 Random 메소드로 이름을 생성함
+		// 앞에 n 으로 시작하게끔 한다던지, 일정한 규칙을 새워 리네임을 할 수 있음
+		
+		// Random 으로 파일 리네임 이름 정하기
+//		Random rand = new Random();
+//		String strResult = "N";
+//		for(int i = 0; i < 7; i++) {
+//			int result = rand.nextInt(20)+1;
+//			strResult += result + "";
+//		}
+		
+		// Date 를 사용해 파일명에 시간을 붙여서 리네임하기
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss"); // 나중에 SS랑 비교
+		String strResult = sdf.format(new Date(System.currentTimeMillis()));
+		
+		// 파일 이름에서 확장자명 추출하기
+		// 확장자명 만 자르기 위해서 +1 을 해줌
+		String ext = fileName.substring(fileName.lastIndexOf(".")+1); // .을 포함하지 않고 자름 +1
+		String fileRename = "N"+strResult+"."+ext;
+		
+		String savePath = saveFolder + "\\" + fileRename;
+		File file = new File(savePath);
+		// ***************************** 파일 저장 *****************************
+		// Unhandled exception type IOException -> 입출력 예외처리를 해줘야 하는데,
+		// insert 때 try-catch를 해주기 때문에 throws Exception 처리를 함.
+		uploadFile.transferTo(file);
+		
+		// ============================== 파일 크기 ==============================
+		long fileLength = uploadFile.getSize();
+		
+		// 파일이름, 경로, 크기를 넘겨주기 위해 Map에 필요한 정보를 저장한 후 return함
+		// 왜 return하는가? DB에 저장하기 위해서 필요한 정보이기 때문에!
+		infoMap.put("fileName", fileName);
+		infoMap.put("fileRename", fileRename);
+		infoMap.put("filePath", savePath);
+		infoMap.put("fileLength", fileLength);
+		return infoMap;
+	}
+
+	// 파일 삭제 메소드
+	private void deleteFile(HttpServletRequest request, String fileName) {
+		String root = request.getSession().getServletContext().getRealPath("resources");
+		String delFilepath = root + "\\nuploadFiles\\" + fileName;// 삭제할 파일 경로
+		File file = new File(delFilepath);
+		if(file.exists()) { // 파일이 존재한다면
+			file.delete();
+		}
+	}
 	
 	
 	

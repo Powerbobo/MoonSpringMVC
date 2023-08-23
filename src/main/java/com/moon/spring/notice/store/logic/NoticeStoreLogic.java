@@ -14,9 +14,17 @@ import com.moon.spring.notice.store.NoticeStore;
 @Repository
 public class NoticeStoreLogic implements NoticeStore{
 
+	// 공지사항 등록
 	@Override
 	public int insertNotice(SqlSession session, Notice notice) {
 		int result = session.insert("NoticeMapper.insertNotice", notice);
+		return result;
+	}
+
+	// 공지사항 수정
+	@Override
+	public int updateNotice(SqlSession session, Notice notice) {
+		int result = session.update("NoticeMapper.updateNotice", notice);
 		return result;
 	}
 
@@ -80,6 +88,13 @@ public class NoticeStoreLogic implements NoticeStore{
 	public int selectListCount(SqlSession session, Map<String, String> paramMap) {
 		int result = session.selectOne("NoticeMapper.selectListByKeywordCount", paramMap);
 		return result;
+	}
+
+	// 공지사항 번호로 조회
+	@Override
+	public Notice selectNoticeByNo(SqlSession session, Integer noticeNo) {
+		Notice NoticeOne = session.selectOne("NoticeMapper.selectNoticeByNo", noticeNo);
+		return NoticeOne;
 	}
 
 }

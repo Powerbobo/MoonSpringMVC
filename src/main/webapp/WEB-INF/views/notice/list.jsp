@@ -28,7 +28,13 @@
 				<c:forEach var="notice" items="${ nList }" varStatus="i">
 				<tr>
 					<td>${ i.count }</td>
-					<td>${ notice.noticeSubject }</td>
+					
+					<%-- <td><a href="/notice/detail.kh?noticeNo=${ notice.noticeNo }"> ${ notice.noticeSubject }</a></td> --%>
+					<c:url var="detailUrl" value="/notice/detail.kh">
+						<c:param name="noticeNo" value="${ notice.noticeNo }"></c:param>
+					</c:url>
+					<td><a href="${ detailUrl }"> ${ notice.noticeSubject }</a></td>
+					
 					<td>
 						${ notice.noticeWriter }</td>
 						<!-- 연/월/일만 출력하기 위해서 c:fmt 사용 -->
@@ -73,10 +79,15 @@
 						</form>
 					</td>
 					<td>
-						<button>글쓰기</button>
+						<button type="button" onclick="showInsertForm();">글쓰기</button>
 					</td>
 				</tr>
 			</tfoot>
 		</table>
+		<script>
+			function showInsertForm() {
+				location.href="/notice/insert.kh";
+			}
+		</script>
 	</body>
 </html>

@@ -11,17 +11,24 @@
 		<result property="nCreateDate" 		column="N_CREATE_DATE" />
 		<result property="nUpdateDate" 		column="N_UPDATE_DATE" />
 		<result property="noticeFilename" 	column="NOTICE_FILENAME" />
+		<result property="noticeFileRename" column="NOTICE_FILERENAME" />
 		<result property="noticeFilepath" 	column="NOTICE_FILEPATH" />
 		<result property="noticeFilelength" column="NOTICE_FILELENGTH" />
 	</resultMap>
 
+	<!-- 공지사항 등록 -->
 	<insert id="insertNotice">
-		INSERT INTO NOTICE_TBL VALUES(SEQ_NOTICE_NO.NEXTVAL, #{ noticeSubject }, #{ noticeContent }, #{ noticeWriter }, DEFAULT, DEFAULT, #{ noticeFilename }, #{ noticeFilepath }, #{ noticeFilelength })
+		INSERT INTO NOTICE_TBL VALUES(SEQ_NOTICE_NO.NEXTVAL, #{ noticeSubject }, #{ noticeContent }, #{ noticeWriter }, DEFAULT, DEFAULT, #{ noticeFilename }, #{ noticeFileRename }, #{ noticeFilepath }, #{ noticeFilelength })
 	</insert>
+	
+	<!-- 공지사항 수정 -->
+	<update id="updateNotice">
+		UPDATE NOTICE_TBL SET NOTICE_SUBJECT = #{ noticeSubject }, NOTICE_CONTENT = #{ noticeContent }, N_UPDATE_DATE = DEFAULT, NOTICE_FILENAME = #{ noticeFilename }, NOTICE_FILERENAME = #{ noticeFileRename }, NOTICE_FILEPATH = #{ noticeFilepath }, NOTICE_FILELENGTH = #{ noticeFilelength } WHERE NOTICE_NO = #{ noticeNo }
+	</update>
 	
 	<!-- 공지사항 가져오기 -->
 	<select id="selectNoticeList" resultMap="noticeResultMap">
-		SELECT * FROM NOTICE_TBL ORDER BY NOTICE_NO DESC
+		SELECT * FROM NOTICE_TBL ORDER BY N_CREATE_DATE DESC
 	</select>
 	
 	<!-- 공지사항 전체 검색 -->
@@ -90,4 +97,13 @@
 			WHERE NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%'
 		</if>
 	</select>
+	
+	<!-- 공지사항 번호로 조회 -->
+	<select id="selectNoticeByNo" resultMap="noticeResultMap">
+		SELECT * FROM NOTICE_TBL WHERE NOTICE_NO = #{ noticeNo }
+	</select>
+	
+	
+	
+	
 </mapper>
