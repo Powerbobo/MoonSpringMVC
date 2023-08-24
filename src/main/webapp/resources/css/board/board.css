@@ -1,0 +1,52 @@
+@charset "UTF-8";
+@font-face {
+    font-family: 'LINESeedKR-Bd';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'MBC1961GulimM';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-01@1.0/MBC1961GulimM.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+table {
+	border : 1px solid black;
+	background-color : #ccc;
+/* 	margin : 0 auto; */
+	width : 600px;
+/* 	border-collapse : collapse; */
+	border-collapse: separate; /* 테두리 겹치기 해제 */
+	border-spacing: 0; /* 셀 사이의 간격 설정 */
+}
+
+th, td {
+	font-family:'MBC1961GulimM';
+	border : 1px solid black;
+	text-align: center;
+	
+}
+a {
+	text-decoration: none;
+}
+ul {
+	list-style: none; /* 목록 점 없애기 */
+}
+li {
+	padding-left: 0; /* 왼쪽 여백 없애기 */
+	margin : 10px auto;
+	font-family:'MBC1961GulimM';
+}
+label {
+  display: inline-block;
+  width: 70px; /* 라벨의 너비 설정 */
+/*   margin-right: 0px; 라벨과 입력 요소 사이의 간격 설정 */
+}
+fieldset {
+  border-radius: 10px; /* 각 모서리를 둥글게 만듭니다 */
+  border: 1px solid #ccc; /* 테두리 스타일 설정 */
+  padding: 20px; /* 안쪽 여백 설정 */
+  width : 710px;
+  background-color : #AEC8CA;
+}

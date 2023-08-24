@@ -159,16 +159,28 @@ public class MemberController {
 	}
 	
 	// 마이페이지 이동
-	@RequestMapping(value="/member/myPage.kh", method=RequestMethod.GET)
+	@RequestMapping(value="/member/myPage.kh", method=RequestMethod.POST)
+	// url 과 쿼리스트링을 알면 다른 아이디의 마이페이지도 들어갈 수 있어서 post 방식으로 바꿈
 	public String showMyPage(
 			// 쿼리스트링 받기 위해서 RequestParam 써줌
-			@RequestParam("memberId") String memberId
+			// @RequestParam("memberId") String memberId
 			// 모델에 키와 키값으로 데이터를 넣어주면 jsp 에서 꺼내서 사용 가능
+			
+			// 마이페이지를 session에서 아이디 정보를 가져와 이동하기 위해 선언함
+			 HttpSession session
+			 
 			, Model model) {
 		// SELECT * FROM MEMBER_TBL WHERE MEMBER_ID = ?
 		// Exception 발생 시 에러메세지를 출력하기 위해 try ~ catch 설정해줌
 		try {
-			Member member = service.getMemberById(memberId);
+			
+			// getAttribute 가 Object로 가져오기 때문에 String 으로 강제 형변환을 해준다.
+			String memberId = (String)session.getAttribute("memberId");
+			Member member = null;
+			// session이 값이 없거나 null 일 경우
+			if(memberId != "" && memberId!=null) { // 유효성 검사
+				member = service.getMemberById(memberId);
+			}
 			if(member != null) {
 				// 성공 -> 마이페이지 이동
 				model.addAttribute("member", member);

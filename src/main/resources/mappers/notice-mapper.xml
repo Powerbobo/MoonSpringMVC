@@ -16,45 +16,45 @@
 		<result property="noticeFilelength" column="NOTICE_FILELENGTH" />
 	</resultMap>
 
-	<!-- 공지사항 등록 -->
+	<!-- 게시글 등록 -->
 	<insert id="insertNotice">
 		INSERT INTO NOTICE_TBL VALUES(SEQ_NOTICE_NO.NEXTVAL, #{ noticeSubject }, #{ noticeContent }, #{ noticeWriter }, DEFAULT, DEFAULT, #{ noticeFilename }, #{ noticeFileRename }, #{ noticeFilepath }, #{ noticeFilelength })
 	</insert>
 	
 	<!-- 공지사항 수정 -->
-	<update id="updateNotice">
-		UPDATE NOTICE_TBL SET NOTICE_SUBJECT = #{ noticeSubject }, NOTICE_CONTENT = #{ noticeContent }, N_UPDATE_DATE = DEFAULT, NOTICE_FILENAME = #{ noticeFilename }, NOTICE_FILERENAME = #{ noticeFileRename }, NOTICE_FILEPATH = #{ noticeFilepath }, NOTICE_FILELENGTH = #{ noticeFilelength } WHERE NOTICE_NO = #{ noticeNo }
-	</update>
+<!-- 	<update id="updateNotice"> -->
+<!-- 		UPDATE NOTICE_TBL SET NOTICE_SUBJECT = #{ noticeSubject }, NOTICE_CONTENT = #{ noticeContent }, N_UPDATE_DATE = DEFAULT, NOTICE_FILENAME = #{ noticeFilename }, NOTICE_FILERENAME = #{ noticeFileRename }, NOTICE_FILEPATH = #{ noticeFilepath }, NOTICE_FILELENGTH = #{ noticeFilelength } WHERE NOTICE_NO = #{ noticeNo } -->
+<!-- 	</update> -->
 	
 	<!-- 공지사항 가져오기 -->
-	<select id="selectNoticeList" resultMap="noticeResultMap">
-		SELECT * FROM NOTICE_TBL ORDER BY N_CREATE_DATE DESC
-	</select>
+<!-- 	<select id="selectNoticeList" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL ORDER BY N_CREATE_DATE DESC -->
+<!-- 	</select> -->
 	
 	<!-- 공지사항 전체 검색 -->
-	<select id="searchNoticeByAll" resultMap="noticeResultMap">
-		SELECT * FROM NOTICE_TBL WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%'
-	</select>
+<!-- 	<select id="searchNoticeByAll" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 	</select> -->
 	
 	<!-- 공지사항 작성자로 검색 -->
-	<select id="searchNoticeByWriter" resultMap="noticeResultMap">
-		SELECT * FROM NOTICE_TBL WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%'
-	</select>
+<!-- 	<select id="searchNoticeByWriter" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 	</select> -->
 		
 	<!-- 공지사항 제목으로 검색 -->
-	<select id="selectNoticeByTitle" resultMap="noticeResultMap">
-		SELECT * FROM NOTICE_TBL WHERE NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%'
-	</select>
+<!-- 	<select id="selectNoticeByTitle" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL WHERE NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 	</select> -->
 
 	<!-- 공지사항 내용으로 검색 -->
-	<select id="searchNoticeByContent" resultMap="noticeResultMap">
-		SELECT * FROM NOTICE_TBL WHERE NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%'
-	</select>
+<!-- 	<select id="searchNoticeByContent" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL WHERE NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 	</select> -->
 
 	<!-- 공지사항 갯수 가져오기 -->
-	<select id="selectNoticeListCount" resultType="_int">
-		SELECT COUNT(*) FROM NOTICE_TBL
-	</select>
+<!-- 	<select id="selectNoticeListCount" resultType="_int"> -->
+<!-- 		SELECT COUNT(*) FROM NOTICE_TBL -->
+<!-- 	</select> -->
 	
 	<!-- 공지사항 Mybatis 동적 쿼리문 -->
 	<select id="searchNoticeByKeyword" resultMap="noticeResultMap">

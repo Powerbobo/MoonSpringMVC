@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BoardMapper">
+
+	<!-- typeAliases로 별칭을 부여야 Notice로 작성 가능하고, 아니면 경로 다 적어줘야 함. -->
+	<resultMap type="Board" id="BoardResultMap">
+		<id property="boardNo" column="BOARD_NO" />
+		<result property="boardTitle"	   column="BOARD_TITLE" />
+		<result property="boardContent"    column="BOARD_CONTENT" />
+		<result property="boardWriter" 	   column="BOARD_WRITER" />
+		<result property="boardFilename"   column="BOARD_FILENAME" />
+		<result property="boardFileRename" column="BOARD_FILERENAME" />
+		<result property="boardFilepath"   column="BOARD_FILEPATH" />
+		<result property="boardFileLength" column="BOARD_FILELENGTH" />
+		<result property="boardCount" 	   column="BOARD_COUNT" />
+		<result property="bCreateDate"	   column="B_CREATE_DATE" />
+		<result property="bUpdateDate"	   column="B_UPDATE_DATE" />
+		<result property="bStatus"		   column="B_STATUS" />
+	</resultMap>
+
+	<!-- 게시글 등록 -->
+	<insert id="insertBoard">
+		INSERT INTO BOARD_TBL VALUES(
+			SEQ_BOARD_NO.NEXTVAL, #{ boardTitle }, #{ boardContent }
+			, #{ boardWriter }, #{ boardFilename }
+			, #{ boardFileRename }, #{ boardFilepath }, #{ boardFileLength }
+			, '0', DEFAULT, DEFAULT, DEFAULT)
+	</insert>
+	
+	<!-- 전체 게시물 갯수 -->
+	<select id="selectListCount" resultType="_int">
+		SELECT COUNT(*) FROM BOARD_TBL
+	</select>
+	
+	<!-- 게시글 전체 조회 -->
+	<select id="selectBoardList" resultMap="BoardResultMap">
+		SELECT * FROM BOARD_TBL ORDER BY BOARD_NO DESC
+	</select>
+
+	<!-- 번호로 게시글 조회 -->
+	<select id="selectBoardByNo" resultMap="BoardResultMap">
+		SELECT * FROM BOARD_TBL WHERE BOARD_NO = #{ boardNo }
+	</select>
+
+
+
+
+	<!-- 공지사항 수정 -->
+<!-- 	<update id="updateNotice"> -->
+<!-- 		UPDATE NOTICE_TBL SET NOTICE_SUBJECT = #{ noticeSubject }, NOTICE_CONTENT = #{ noticeContent }, N_UPDATE_DATE = DEFAULT, NOTICE_FILENAME = #{ noticeFilename }, NOTICE_FILERENAME = #{ noticeFileRename }, NOTICE_FILEPATH = #{ noticeFilepath }, NOTICE_FILELENGTH = #{ noticeFilelength } WHERE NOTICE_NO = #{ noticeNo } -->
+<!-- 	</update> -->
+	
+	
+	<!-- 공지사항 전체 검색 -->
+<!-- 	<select id="searchNoticeByAll" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 	</select> -->
+	
+	<!-- 공지사항 작성자로 검색 -->
+<!-- 	<select id="searchNoticeByWriter" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 	</select> -->
+		
+	<!-- 공지사항 제목으로 검색 -->
+<!-- 	<select id="selectNoticeByTitle" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL WHERE NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 	</select> -->
+
+	<!-- 공지사항 내용으로 검색 -->
+<!-- 	<select id="searchNoticeByContent" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL WHERE NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 	</select> -->
+
+	<!-- 공지사항 갯수 가져오기 -->
+<!-- 	<select id="selectNoticeListCount" resultType="_int"> -->
+<!-- 		SELECT COUNT(*) FROM NOTICE_TBL -->
+<!-- 	</select> -->
+	
+	<!-- 공지사항 Mybatis 동적 쿼리문 -->
+<!-- 	<select id="searchNoticeByKeyword" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL -->
+		<!-- 공지사항 전체 조회 -->
+<!-- 		<if test="searchCondition == 'all'"> -->
+<!-- 			WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%'OR NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 		</if> -->
+		<!-- 공지사항 작성자로 조회 -->
+<!-- 		<if test="searchCondition == 'writer'"> -->
+<!-- 			WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%'  -->
+<!-- 		</if> -->
+		<!-- 공지사항 제목으로 조회 -->
+<!-- 		<if test="searchCondition == 'title'"> -->
+<!-- 			WHERE NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%'  -->
+<!-- 		</if> -->
+		<!-- 공지사항 내용 조회 -->
+<!-- 		<if test="searchCondition == 'content'"> -->
+<!-- 			WHERE NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 		</if> -->
+<!-- 	</select> -->
+	
+	<!-- 공지사항 검색 게시물 전체 갯수 -->
+<!-- 	<select id="selectListByKeywordCount" resultType="_int"> -->
+<!-- 		SELECT COUNT(*) FROM NOTICE_TBL -->
+		<!-- 공지사항 전체 조회 -->
+<!-- 		<if test="searchCondition == 'all'"> -->
+<!-- 			WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%'OR NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%' OR NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 		</if> -->
+		<!-- 공지사항 작성자로 조회 -->
+<!-- 		<if test="searchCondition == 'writer'"> -->
+<!-- 			WHERE NOTICE_WRITER LIKE '%'||#{ searchKeyword }||'%'  -->
+<!-- 		</if> -->
+		<!-- 공지사항 제목으로 조회 -->
+<!-- 		<if test="searchCondition == 'title'"> -->
+<!-- 			WHERE NOTICE_SUBJECT LIKE '%'||#{ searchKeyword }||'%'  -->
+<!-- 		</if> -->
+		<!-- 공지사항 내용 조회 -->
+<!-- 		<if test="searchCondition == 'content'"> -->
+<!-- 			WHERE NOTICE_CONTENT LIKE '%'||#{ searchKeyword }||'%' -->
+<!-- 		</if> -->
+<!-- 	</select> -->
+	
+	<!-- 공지사항 번호로 조회 -->
+<!-- 	<select id="selectNoticeByNo" resultMap="noticeResultMap"> -->
+<!-- 		SELECT * FROM NOTICE_TBL WHERE NOTICE_NO = #{ noticeNo } -->
+<!-- 	</select> -->
+	
+
+</mapper>
