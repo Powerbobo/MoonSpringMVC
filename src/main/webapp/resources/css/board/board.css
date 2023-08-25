@@ -24,7 +24,7 @@ table {
 th, td {
 	font-family:'MBC1961GulimM';
 	border : 1px solid black;
-	text-align: center;
+/* 	text-align: center; */
 	
 }
 a {
@@ -37,6 +37,9 @@ li {
 	padding-left: 0; /* 왼쪽 여백 없애기 */
 	margin : 10px auto;
 	font-family:'MBC1961GulimM';
+}
+h1 {
+	font-family:'LINESeedKR-Bd';
 }
 label {
   display: inline-block;

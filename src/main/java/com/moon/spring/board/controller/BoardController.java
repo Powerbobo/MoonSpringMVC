@@ -20,13 +20,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.moon.spring.board.domain.Board;
 import com.moon.spring.board.domain.PageInfo;
+import com.moon.spring.board.domain.Reply;
 import com.moon.spring.board.service.BoardService;
+import com.moon.spring.board.service.ReplyService;
 
 @Controller
 public class BoardController {
 	
 	@Autowired
 	private BoardService bService;
+	
+	@Autowired
+	private ReplyService rService;
 	
 	/**
 	 * 게시글 작성 페이지 이동
@@ -90,6 +95,10 @@ public class BoardController {
 		try {
 			Board boardOne = bService.selectBoardByNo(boardNo);
 			if(boardOne != null) {
+				List<Reply> replyList = rService.selectReplyList(boardNo);
+				if(replyList.size() > 0) {
+					mv.addObject("rList", replyList);
+				}
 				mv.addObject("board", boardOne);
 				mv.addObject("board/detail");
 			} else {
@@ -99,7 +108,7 @@ public class BoardController {
 				mv.setViewName("/common/errorPage");
 			}
 		} catch (Exception e) {
-			mv.addObject("msg", "게시글 조회가 완료되지 않았습니다.");
+			mv.addObject("msg", "관리자에게 문의바랍니다.");
 			mv.addObject("error", e.getMessage());
 			mv.addObject("url", "/board/list.kh");
 			mv.setViewName("/common/errorPage");

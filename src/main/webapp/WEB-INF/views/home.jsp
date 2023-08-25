@@ -22,6 +22,7 @@
 				<input type="hidden" name="memberId" value="${ memberId }">
 				<input type="submit" value="마이페이지">
 			</form>
+			<a href="/board/list.kh">게시판</a>
 			<%-- <a href="/member/myPage.kh?memberId=${ memberId }">마이페이지</a> --%>
 		</c:if>
 	</body>
