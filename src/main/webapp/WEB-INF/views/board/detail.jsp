@@ -30,7 +30,7 @@
 			<li>
 				<label>첨부파일</label>
 				<!-- String으로 받을 수 없고, 변환작업이 필요함 -->
-				<img alt="첨부파일" src="../resources/buploadFiles/${ board.boardFilename }">
+<%-- 				<img alt="첨부파일" src="../resources/buploadFiles/${ board.boardFilename }"> --%>
 				<!-- 하이퍼링크로 이미지 다운받게끔 할 수도 있음 -->
 				<a href="${ board.boardFilepath }" download>${ board.boardFilename }</a>
 			</li>
@@ -113,10 +113,13 @@
 				const input3 = document.createElement("input");
 				input3.type = "text";
 				// 여기를 this를 이용하여 수정해주세요!
+ 				// input3.value = document.querySelector("#replyContent").value;
 				// 아래 방식으로 입력하면 첫 댓글만 수정되고, 나머진 수정하면 첫 댓글로 수정된다.
 				// this 를 이용해 매개변수를 만들어 수정해야 함!
- 				// input3.value = document.querySelector("#replyContent").value;
-				input3.value = obj.parentElement.parentElement.nextElementSibling = "";
+				// 구조를 보면 부모의 부몬의 자식을 가져와야 함.
+				// this를 이용해서 내가 원하는 노드 찾기
+				input3.value = obj.parentElement.previousElementSibling.childNodes[0].value;
+				// obj.parentElement.previousElementSibling.children[0].value; -> 이 방식도 가능
 				input3.name = "replyContent";
 				
 				form.appendChild(input1);

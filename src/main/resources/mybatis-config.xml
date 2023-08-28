@@ -5,6 +5,7 @@
 	<settings>
 		<setting name="jdbcTypeForNull" value="NULL" />
 	</settings>
+	
 	<typeAliases>
 		<typeAlias type="com.moon.spring.member.domain.Member" alias="Member"/>
 		<typeAlias type="com.moon.spring.notice.domain.Notice" alias="Notice"/>
