@@ -30,16 +30,30 @@
 			<li>
 				<label>첨부파일</label>
 				<!-- String으로 받을 수 없고, 변환작업이 필요함 -->
-<%-- 				<img alt="첨부파일" src="../resources/buploadFiles/${ board.boardFilename }"> --%>
+				<img alt="첨부파일" src="../resources/buploadFiles/${ board.boardFilename }">
 				<!-- 하이퍼링크로 이미지 다운받게끔 할 수도 있음 -->
 				<a href="${ board.boardFilepath }" download>${ board.boardFilename }</a>
+				<!-- 첨부파일 있는 경우에만 삭제하기 버튼 보이게 하기 -->
+				<c:if test="${ not empty board.boardFilename }">
+					<a href="#">삭제하기</a>
+				</c:if>
 			</li>
 		</ul>
+		<br><br>
+		<c:url var="boardDelUrl" value="/board/delete.kh">
+			<c:param name="boardNo" value="${ board.boardNo }"></c:param>
+			<c:param name="boardWriter" value="${ board.boardWriter }"></c:param>
+		</c:url>
+		<c:url var="modifyUrl" value="/board/modify.kh">
+			<c:param name="boardNo" value="${ board.boardNo }"></c:param>
+		</c:url>
 		<div>
-			<button type="button" onclick="showModifyPage();">수정하기</button>
-			<button>삭제하기</button>
-			<button type="button" onclick="showListPage();">목록</button>
-			<!-- <a href="/member/login.kh">로그인</a>  -->
+			<c:if test="${ board.boardWriter eq memberId }">
+				<button type="button" onclick="showModifyPage('${ modifyUrl }');">수정하기</button>
+				<button type="button" onclick="deleteBoard('${ boardDelUrl }');">삭제하기</button>
+			</c:if>
+				<button type="button" onclick="showListPage();">목록</button>
+				<button type="button" onclick="javascript:history.go(-1);">뒤로가기</button>
 		</div>
 		<!-- 댓글 등록 -->
 		<br>
@@ -68,7 +82,14 @@
 					<td>${ reply.rCreateDate }</td>
 					<td>
 						<a href="javascript:void(0)" onclick="showReplyModifyForm(this,'${ reply.replyContent }');">수정하기</a>
-						<a href="#">삭제하기</a>
+						<c:url var="delUrl" value="/reply/delete.kh">
+							<c:param name="replyNo" value="${ reply.replyNo }"></c:param>
+							<!-- 본인이 작성한 댓글만 삭제하기 위해서 추가함 -->
+							<c:param name="replyWriter" value="${ reply.replyWriter }"></c:param>
+							<!-- 성공하면 detail로 가기 위해서 필요한 boardNo 셋팅 -->
+							<c:param name="refBoardNo" value="${ reply.refBoardNo }"></c:param>
+						</c:url>
+						<a href="javascript:void(0);" onclick="deleteReply('${ delUrl }');">삭제하기</a>
 					</td>
 				</tr>
 			<tr id="replyModifyForm" style="display:none;">
@@ -86,14 +107,32 @@
 			</tr>
 			</c:forEach>
 		</table>
-	<script>
-			function showModifyPage() {
-				const boardNo = "${ board.boardNo }";
-				location.href="/board/modify.kh?boardNo=" + boardNo;
+		<script>
+		// ############################## 게시글 ##############################
+			// 게시글 삭제
+			const deleteBoard = (boardUrl) => {
+				location.href = boardUrl;
 			}
+			
+			// 게시글 수정페이지 이동
+			function showModifyPage(modifyUrl) {
+				location.href = modifyUrl;
+			}
+			
+			// 게시글 목록으로 이동
 			function showListPage() {
 				location.href="/board/list.kh"
 			}
+			
+		// ############################## 댓글 ##############################
+			// 게시글 댓글 삭제
+			function deleteReply(url) {
+				// DELETE FROM REPLY_TBL WHERE REPLY_NO = 샵{ replyNo } AND R_STATUS = 'Y'
+				// UPDATE REPLY_TBL SET R_STATUS = 'N' WHERE REPLY_NO = 샵{ replyNo }
+				location.href = url;
+			}
+			
+			// 게시글 댓글 수정하기
 			function replyModify(obj, replyNo, refBoardNo) {
 				// DOM 프로그래밍을 이용하는 방법
 				const form = document.createElement("form");
@@ -113,7 +152,7 @@
 				const input3 = document.createElement("input");
 				input3.type = "text";
 				// 여기를 this를 이용하여 수정해주세요!
- 				// input3.value = document.querySelector("#replyContent").value;
+					// input3.value = document.querySelector("#replyContent").value;
 				// 아래 방식으로 입력하면 첫 댓글만 수정되고, 나머진 수정하면 첫 댓글로 수정된다.
 				// this 를 이용해 매개변수를 만들어 수정해야 함!
 				// 구조를 보면 부모의 부몬의 자식을 가져와야 함.
@@ -129,39 +168,41 @@
 				document.body.appendChild(form);
 				form.submit();
 			}
+			
+			// 게시글 댓글 수정하기 이벤트 연결
 			function showReplyModifyForm(obj, replyContent) {
 				// #1. HTML태그, display:none 사용하는 방법
-//  			document.querySelector("#replyModifyForm").style.display = "";
+	// 			document.querySelector("#replyModifyForm").style.display = "";
 				obj.parentElement.parentElement.nextElementSibling.style.display = "";
-
-
+	
+	
 				// #2. DOM프로그래밍 이용하는 방법
-// 				<tr id="replyModifyForm" style="display:none;">
-// 					<td colspan="3"><input type="text" size="50" value="${ reply.replyContent }"></td>
-// 					<td><input type="button" value="완료"></td>
-// 				</tr>
-// 				const trTag = document.createElement("tr");
-// 				const tdTag1 = document.createElement("td");
-// 				tdTag1.colSpan = 3;
-// 				const inputTag1 = document.createElement("input");
-// 				inputTag1.type = "text";
-// 				inputTag1.size = 50;
-// 				inputTag1.value = replyContent;
-// 				tdTag1.appendChild(inputTag1);
-// 				const tdTag2 = document.createElement("td");
-// 				const inputTag2 = document.createElement("input");
-// 				inputTag2.type="button";
-// 				inputTag2.value="완료";
-// 				tdTag2.appendChild(inputTag2);
-// 				trTag.appendChild(tdTag1);
-// 				trTag.appendChild(tdTag2);				
-// 				console.log(trTag);
-// 				// 클릭한 a를 포함하고 있는 tr 다음에 수정 Form이 있는 tr 추가하기
-// 				const prevTrTag = obj.parentElement.parentElement;
-// 				// 수정하기 1개만 출력하기
-//  				// if(prevTrTag.nextSibling == null) -> 이렇게만 쓰면 수정하는게 계속 추가 됨!
-// 				if(prevTrTag.nextElementSibling || !prevTrTag.nextElementSibling.querySelector("input"))
-// 					prevTrTag.parentNode.insertBefore(trTag, prevTrTag.nextSibling);
+	// 			<tr id="replyModifyForm" style="display:none;">
+	// 				<td colspan="3"><input type="text" size="50" value="${ reply.replyContent }"></td>
+	// 				<td><input type="button" value="완료"></td>
+	// 			</tr>
+	// 			const trTag = document.createElement("tr");
+	// 			const tdTag1 = document.createElement("td");
+	// 			tdTag1.colSpan = 3;
+	// 			const inputTag1 = document.createElement("input");
+	// 			inputTag1.type = "text";
+	// 			inputTag1.size = 50;
+	// 			inputTag1.value = replyContent;
+	// 			tdTag1.appendChild(inputTag1);
+	// 			const tdTag2 = document.createElement("td");
+	// 			const inputTag2 = document.createElement("input");
+	// 			inputTag2.type="button";
+	// 			inputTag2.value="완료";
+	// 			tdTag2.appendChild(inputTag2);
+	// 			trTag.appendChild(tdTag1);
+	// 			trTag.appendChild(tdTag2);				
+	// 			console.log(trTag);
+				// 클릭한 a를 포함하고 있는 tr 다음에 수정 Form이 있는 tr 추가하기
+	// 			const prevTrTag = obj.parentElement.parentElement;
+				// 수정하기 1개만 출력하기
+					// if(prevTrTag.nextSibling == null) -> 이렇게만 쓰면 수정하는게 계속 추가 됨!
+	// 			if(prevTrTag.nextElementSibling || !prevTrTag.nextElementSibling.querySelector("input"))
+	// 				prevTrTag.parentNode.insertBefore(trTag, prevTrTag.nextSibling);
 				
 			}
 		</script>

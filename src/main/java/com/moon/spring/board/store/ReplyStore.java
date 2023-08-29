@@ -17,19 +17,27 @@ public interface ReplyStore {
 	int insertReply(SqlSession session, Reply reply);
 
 	/**
-	 * 댓글 전체 조회 Store
-	 * @param session
-	 * @param reply
-	 * @return
-	 */
-	List<Reply> selectReplyList(SqlSession session, Integer boardNo);
-
-	/**
 	 * 게시글 댓글 수정 Store
 	 * @param session
 	 * @param reply
 	 * @return int
 	 */
 	int updateReply(SqlSession session, Reply reply);
+
+	/**
+	 * 게시글 댓글 삭제 Store
+	 * @param session
+	 * @param reply
+	 * @return int
+	 */
+	int deleteRely(SqlSession session, Reply reply);
+
+	/**
+	 * 댓글 전체 조회 Store
+	 * @param session
+	 * @param reply
+	 * @return List<Reply>
+	 */
+	List<Reply> selectReplyList(SqlSession session, Integer boardNo);
 
 }

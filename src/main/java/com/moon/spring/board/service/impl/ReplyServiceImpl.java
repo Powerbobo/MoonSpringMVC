@@ -27,18 +27,25 @@ public class ReplyServiceImpl implements ReplyService{
 		return result;
 	}
 
-	// 댓글 전체 조회
-	@Override
-	public List<Reply> selectReplyList(Integer boardNo) {
-		List<Reply> bList = rStore.selectReplyList(session, boardNo);
-		return bList;
-	}
-
 	// 게시글 댓글 수정
 	@Override
 	public int updateReply(Reply reply) {
 		int result = rStore.updateReply(session, reply);
 		return result;
+	}
+
+	// 게시글 댓글 삭제
+	@Override
+	public int deleteRely(Reply reply) {
+		int result = rStore.deleteRely(session, reply);
+		return result;
+	}
+
+	// 댓글 전체 조회
+	@Override
+	public List<Reply> selectReplyList(Integer boardNo) {
+		List<Reply> bList = rStore.selectReplyList(session, boardNo);
+		return bList;
 	}
 	
 }

@@ -20,6 +20,20 @@ public class BoardStoreLogic implements BoardStore{
 		return result;
 	}
 
+	// 게시글 수정
+	@Override
+	public int updateBoard(SqlSession sqlSession, Board board) {
+		int result = sqlSession.update("BoardMapper.updateBoard", board);
+		return result;
+	}
+
+	// 게시글 삭제
+	@Override
+	public int deleteBoard(SqlSession sqlSession, Board board) {
+		int result = sqlSession.update("BoardMapper.deleteBoard", board);
+		return result;
+	}
+
 	// 전체 게시물 갯수
 	@Override
 	public int selectListCount(SqlSession sqlSession) {

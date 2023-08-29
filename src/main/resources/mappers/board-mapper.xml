@@ -27,6 +27,19 @@
 			, '0', DEFAULT, DEFAULT, DEFAULT)
 	</insert>
 	
+	<!-- 게시글 수정 -->
+	<update id="updateBoard">
+		UPDATE BOARD_TBL SET BOARD_TITLE = #{ boardTitle }, BOARD_CONTENT = #{ boardContent }
+			, BOARD_FILENAME = #{ boardFilename }, BOARD_FILERENAME = #{ boardFileRename }
+			, BOARD_FILEPATH = #{ boardFilepath }, BOARD_FILELENGTH = #{ boardFileLength }
+			, B_UPDATE_DATE = DEFAULT WHERE BOARD_NO = #{ boardNo }
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<update id="deleteBoard">
+		UPDATE BOARD_TBL SET B_STATUS = 'N' WHERE BOARD_NO = #{ boardNo } AND BOARD_WRITER = #{ boardWriter }
+	</update>
+	
 	<!-- 전체 게시물 갯수 -->
 	<select id="selectListCount" resultType="_int">
 		SELECT COUNT(*) FROM BOARD_TBL
@@ -34,12 +47,12 @@
 	
 	<!-- 게시글 전체 조회 -->
 	<select id="selectBoardList" resultMap="BoardResultMap">
-		SELECT * FROM BOARD_TBL ORDER BY BOARD_NO DESC
+		SELECT * FROM BOARD_TBL WHERE B_STATUS = 'Y' ORDER BY BOARD_NO DESC
 	</select>
 
 	<!-- 번호로 게시글 조회 -->
 	<select id="selectBoardByNo" resultMap="BoardResultMap">
-		SELECT * FROM BOARD_TBL WHERE BOARD_NO = #{ boardNo }
+		SELECT * FROM BOARD_TBL WHERE BOARD_NO = #{ boardNo } AND B_STATUS = 'Y'
 	</select>
 
 

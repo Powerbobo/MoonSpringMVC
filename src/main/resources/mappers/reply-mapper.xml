@@ -24,6 +24,12 @@
 		UPDATE REPLY_TBL SET REPLY_CONTENT = #{ replyContent }, R_UPDATE_DATE = DEFAULT WHERE REPLY_NO = #{ replyNo }
 	</update>
 	
+	<!-- 게시글 댓글 삭제 -->
+	<select id="deleteRely">
+	<!-- DELETE FROM REPLY_TBL WHERE REPLY_NO = { replyNo } AND S_STATUS = 'Y' -->
+		UPDATE REPLY_TBL SET R_STATUS = 'N' WHERE REPLY_NO = #{ replyNo } AND REPLY_WRITER = #{ replyWriter }	
+	</select>
+	
 	<!-- 댓글 전체 조회 -->
 	<select id="selectReplyList" resultMap="replyResultMap">
 		SELECT * FROM REPLY_TBL WHERE REF_BOARD_NO = #{ refBoardNo } AND R_STATUS = 'Y'

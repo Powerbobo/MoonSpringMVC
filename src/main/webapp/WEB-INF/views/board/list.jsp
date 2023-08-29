@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="../resources/css/board/board.css">
 	</head>
 	<body>
+		<h1><a href="/index.jsp">Home</a></h1>
 		<h1>게시글 목록</h1>
 		<table>
 			<!-- 테이블 너비 조정 -->

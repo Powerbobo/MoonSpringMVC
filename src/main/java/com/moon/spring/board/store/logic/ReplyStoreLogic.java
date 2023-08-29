@@ -18,18 +18,25 @@ public class ReplyStoreLogic implements ReplyStore{
 		return result;
 	}
 
-	// 댓글 전체 조회
-	@Override
-	public List<Reply> selectReplyList(SqlSession session, Integer boardNo) {
-		List<Reply> bLsit = session.selectList("ReplyMapper.selectReplyList", boardNo);
-		return bLsit;
-	}
-
 	// 게시글 댓글 수정
 	@Override
 	public int updateReply(SqlSession session, Reply reply) {
 		int result = session.update("ReplyMapper.updateReply", reply);
 		return result;
+	}
+
+	// 게시글 댓글 삭제
+	@Override
+	public int deleteRely(SqlSession session, Reply reply) {
+		int result = session.update("ReplyMapper.deleteRely", reply);
+		return result;
+	}
+
+	// 댓글 전체 조회
+	@Override
+	public List<Reply> selectReplyList(SqlSession session, Integer boardNo) {
+		List<Reply> bLsit = session.selectList("ReplyMapper.selectReplyList", boardNo);
+		return bLsit;
 	}
 
 

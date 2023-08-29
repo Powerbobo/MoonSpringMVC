@@ -27,6 +27,20 @@ public class BoardServiceimpl implements BoardService{
 		return result;
 	}
 
+	// 게시글 수정
+	@Override
+	public int updateBoard(Board board) {
+		int result = bStore.updateBoard(sqlSession, board);
+		return result;
+	}
+
+	// 게시글 삭제
+	@Override
+	public int deleteBoard(Board board) {
+		int result = bStore.deleteBoard(sqlSession, board);
+		return result;
+	}
+
 	// 전체 게시물 갯수
 	@Override
 	public int getListCount() {

@@ -14,16 +14,23 @@ public interface ReplyService {
 	int insertReply(Reply reply);
 
 	/**
-	 * 댓글 전체 조회 Service
-	 * @return
-	 */
-	List<Reply> selectReplyList(Integer boardNo);
-
-	/**
 	 * 게시글 댓글 수정 Service
 	 * @param reply
 	 * @return int
 	 */
 	int updateReply(Reply reply);
+
+	/**
+	 * 게시글 댓글 삭제 Service
+	 * @param reply
+	 * @return int
+	 */
+	int deleteRely(Reply reply);
+
+	/**
+	 * 댓글 전체 조회 Service
+	 * @return List<Reply>
+	 */
+	List<Reply> selectReplyList(Integer boardNo);
 
 }

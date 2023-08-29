@@ -15,10 +15,18 @@ public interface BoardService {
 	int insertBoard(Board board);
 
 	/**
-	 * 전체 게시물 갯수 Service
+	 * 게시글 수정 Service
+	 * @param board
 	 * @return int
 	 */
-	int getListCount();
+	int updateBoard(Board board);
+
+	/**
+	 * 게시글 삭제 Service
+	 * @param board
+	 * @return int
+	 */
+	int deleteBoard(Board board);
 
 	/**
 	 * 게시글 전체 조회 Service
@@ -30,7 +38,13 @@ public interface BoardService {
 	/**
 	 * 번호로 게시글 조회 Service
 	 * @param boardNo
-	 * @return
+	 * @return Board
 	 */
 	Board selectBoardByNo(Integer boardNo);
+
+	/**
+	 * 전체 게시물 갯수 Service
+	 * @return int
+	 */
+	int getListCount();
 }
