@@ -60,6 +60,12 @@
 		<!-- 댓글 목록 -->
 		<br>
 		<table width="500" border="1">
+			<colgroup>
+				<col width="15%">
+				<col width="40%">
+				<col width="20%">
+				<col width="25%">
+			</colgroup>
 			<!-- var : 변수 / item : ?-->
 			<c:forEach var="reply" items="${ rList }">
 				<tr>
@@ -67,12 +73,15 @@
 					<td>${ reply.replyContent }</td>
 					<td>${ reply.rCreateDate }</td>
 					<td>
-						<c:if test="${ board.boardWriter eq memberId }">
-							<button type="button" onclick="showModifyPage('${ modifyUrl }');">수정하기</button>
-							<button type="button" onclick="deleteBoard('${ boardDelUrl }');">삭제하기</button>
-						</c:if>
-						<button type="button" onclick="showListPage();">목록</button>
-						<button type="button" onclick="javascript:history.go(-1);">뒤로가기</button>
+						<a href="javascript:void(0);" onclick="showModifyForm(this, '${reply.replyContent }');">수정하기</a>
+						<c:url var="delUrl" value="/reply/delete.kh">
+							<c:param name="replyNo" value="${ reply.replyNo }"></c:param>
+							<!-- 본인이 작성한 댓글만 삭제하기 위해서 추가함 -->
+							<c:param name="replyWriter" value="${ reply.replyWriter }"></c:param>
+							<!-- 성공하면 detail로 가기 위해서 필요한 boardNo 셋팅 -->
+							<c:param name="refBoardNo" value="${ reply.refBoardNo }"></c:param>
+						</c:url>
+						<a href="javascript:void(0);" onclick="deleteReply('${ delUrl }');">삭제하기</a>
 					</td>
 				</tr>
 			<tr id="replyModifyForm" style="display:none;">
